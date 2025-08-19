@@ -18,9 +18,6 @@ COPY ./tests ./tests
 # Copie des fichiers de configuration
 COPY pytest.ini ./
 
-# Commande pour exécuter les tests lorsque le conteneur démarre
-CMD ["pytest"]
-
 # -- partie test --
 # reprise de l'image builder pour test, reprend également workdir
 FROM builder AS tester
