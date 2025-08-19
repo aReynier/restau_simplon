@@ -1,0 +1,63 @@
+# build multi-stage
+# -- partie build --
+FROM python:3.12-alpine AS builder
+
+WORKDIR /app
+
+#Copie des deux fichiers requirements
+COPY requirements.txt requirements-dev.txt ./
+
+#Installation des dépendances des deux fichiers requirements
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements-dev.txt
+
+# Copie du dossier app et test dans le conteneur
+COPY ./app ./app
+COPY ./tests ./tests
+
+# Copie des fichiers de configuration
+COPY pytest.ini ./
+
+# Commande pour exécuter les tests lorsque le conteneur démarre
+CMD ["pytest"]
+
+# -- partie test --
+# reprise de l'image builder pour test, reprend également workdir
+FROM builder AS tester
+
+CMD ["pytest", "-v", "--junitxml=test-report.xml"]
+
+# -- partie production --
+FROM python:3.12-alpine AS app
+
+WORKDIR /app
+
+#Il y a une façon optimisée de faire avec build
+#version non optimisée pour le moment
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+#copie du code source de l'application depuis l'étape builder
+COPY --from=builder ./app ./app
+
+#variables pour la création de l'utilisateur non-root
+ARG GROUPNAME=restausimplon-group
+ARG USERNAME=restausimplon-app-user
+#ID du groupe
+ARG USER_GID=1000
+#ID de l'utilisateur
+ARG USER_UID=1000
+
+#Création du groupe et de l'utilisateur non-root
+RUN addgroup -g $USER_GID -S $GROUPNAME \
+    && adduser -u $USER_UID -S -G $GROUPNAME $USERNAME
+
+#Déclarer le nouvel utilisateur propriétaire du dossier app
+RUN chown -R $USERNAME:$GROUPNAME /app
+
+#Choisir le nouvel utilisateur comme utilisateur par défaut
+USER $USERNAME
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
