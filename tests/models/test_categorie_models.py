@@ -1,0 +1,1 @@
+from app.models.categorie import Categorie
