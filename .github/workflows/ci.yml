@@ -11,10 +11,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Recuperer code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Parametrer python
-              uses: actions/setup-python@v3
+              uses: actions/setup-python@v5
               with:
                 python-version: '3.12'
 
@@ -29,7 +29,7 @@ jobs:
               run: pytest --junitxml=pytest-report.xml 
 
             - name: Charger le rapport de tests
-              uses: actions/upload-artifact@v3 # Action pour sauvegarder le rapport
+              uses: actions/upload-artifact@v4 # Action pour sauvegarder le rapport
               with:
                 name: pytest-reports
                 path: pytest-report.xml
