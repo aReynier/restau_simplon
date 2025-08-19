@@ -25,6 +25,10 @@ jobs:
                 pip install pytest-cov
                 pip install -r requirements.txt
 
+    test:
+        needs: build
+        runs-on: ubuntu-lastest
+        steps:
             - name: Lancer les tests avec pytest
               run: pytest --junitxml=pytest-report.xml 
 
@@ -33,6 +37,8 @@ jobs:
               with:
                 name: pytest-reports
                 path: pytest-report.xml
-              # télécharge le rapport de test même si les tests échouent
+                # télécharge le rapport de test même si les tests échouent
               if: ${{ always() }}
+
+
               
