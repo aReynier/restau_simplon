@@ -1,4 +1,4 @@
-name: CI restauSimplon docker
+name: CI/CD restauSimplon
 
 on:
   push:
@@ -7,6 +7,33 @@ on:
     branches: [ main ]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Recuperer code
+          uses: actions/checkout@v4
+
+        - name: Parametrer python
+          uses: actions/setup-python@v5
+          with:
+            python-version: '3.12'
+
+        - name: Installer les dependances
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements-dev.txt
+
+        - name: Lancer les tests avec pytest
+          run: pytest --junitxml=pytest-report.xml 
+
+        - name: Charger le rapport de tests
+          uses: actions/upload-artifact@v4 # Action pour sauvegarder le rapport
+          with:
+            name: pytest-reports
+            path: pytest-report.xml
+            # télécharge le rapport de test même si les tests échouent
+          if: ${{ always() }}      
+
   docker:
     runs-on: ubuntu-latest
     permissions:
