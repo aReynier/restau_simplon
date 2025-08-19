@@ -27,7 +27,7 @@ jobs:
 
     test:
         needs: build
-        runs-on: ubuntu-lastest
+        runs-on: ubuntu-latest
         steps:
             - name: Lancer les tests avec pytest
               run: pytest --junitxml=pytest-report.xml 
