@@ -26,4 +26,13 @@ jobs:
                 pip install -r requirements.txt
 
             - name: Lancer les tests avec pytest
-              run: pytest
+              run: pytest --junitxml=pytest-report.xml 
+
+            - name: Charger le rapport de tests
+              uses: actions/upload-artifact@v3 # Action pour sauvegarder le rapport
+              with:
+                name: pytest-reports
+                path: pytest-report.xml
+              # télécharge le rapport de test même si les tests échouent
+              if: ${{ always() }}
+              
