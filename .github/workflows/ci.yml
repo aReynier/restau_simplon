@@ -22,6 +22,15 @@ jobs:
         - name: Lancer les tests
           run: docker run --rm app:tests
 
+        - name: Charger le rapport de tests
+          uses: actions/upload-artifact@v4 # Action pour sauvegarder le rapport
+          with:
+            name: pytest-reports
+            path: pytest-report.xml
+            # télécharge le rapport de test même si les tests échouent
+          if: ${{ always() }}   
+
+
   docker:
     runs-on: ubuntu-latest
     permissions:
