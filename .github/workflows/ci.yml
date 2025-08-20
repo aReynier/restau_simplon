@@ -20,7 +20,7 @@ jobs:
           run: docker build -f Dockerfile.tests --target tester -t app:tests .
 
         - name: Lancer les tests
-          run: docker run --rm app:tests
+          run: docker run --rm -v ${{ github.workspace }}/reports:/app/reports app:tests
 
         - name: Charger le rapport de tests
           uses: actions/upload-artifact@v4 # Action pour sauvegarder le rapport
