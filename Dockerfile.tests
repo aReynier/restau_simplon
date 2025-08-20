@@ -22,7 +22,7 @@ COPY pytest.ini ./
 # reprise de l'image builder pour test, reprend également workdir
 FROM builder AS tester
 
-CMD ["pytest", "-v", "--junitxml=test-report.xml"]
+CMD ["pytest", "-v", "--junitxml=pytest-report.xml"]
 
 # -- partie production --
 FROM python:3.12-alpine AS app
