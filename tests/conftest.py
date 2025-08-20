@@ -17,3 +17,6 @@ def session(engine):
 @pytest.fixture
 def categorie_fixture_create():
     return CategorieCreate(nom="test", description="ceci est un test")
+
+
+

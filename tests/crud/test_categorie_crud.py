@@ -1,6 +1,6 @@
 from app.crud.categorie import Categorie
 from app.crud.categorie import get_all_categories, create_categorie
-import pytest
+import pytest    
 
 def test_create_categorie(categorie_fixture_create, session):
     response = create_categorie(categorie_fixture_create, session)
